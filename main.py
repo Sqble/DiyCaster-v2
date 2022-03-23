@@ -24,7 +24,9 @@ while running:
 
     Draw2D.drawEntity(player)
     Draw2D.drawMap(map)
-    RayController.castRays(player,map)
+
+    ray = RayController.cast_XY_Rays(player,map)
+    Draw2D.drawRay(ray)
 
     pygame.display.flip()
 pygame.quit()

@@ -1,11 +1,10 @@
 from math import radians,sqrt,tan
-from operator import index, indexOf
 from Game.config import pygame,screen
 
 class RayController:
 
 
-    def castRays(player,map):
+    def cast_XY_Rays(player,map):
 
         rayX = RayX(player.x,player.y,player.angle)
         xDistance = rayX.fullCast(player,map)
@@ -14,27 +13,40 @@ class RayController:
         yDistance = rayY.fullCast(player,map)
 
         if xDistance > yDistance:
-            pygame.draw.line(screen, (255,0,0), (player.x, player.y), (rayY.x, rayY.y) )
+            rayY.distance = yDistance
+            return rayY
         else:
-            pygame.draw.line(screen, (0,0,255), (player.x, player.y), (rayX.x, rayX.y) )
+            rayX.distance = xDistance
+            return rayX
+    
+
+    #def drawRay(player,map):
+    #    ray = RayController.cast_XY_Rays(player,map)
 
 
 
 
-
+#x, y, startX, startY, angle, texture, type, distance
 class Ray:
 
 
     def __init__(self,x,y,angle):
-        self.x = x
-        self.y = y
+        self.x = self.startX = x
+        self.y = self.startY = y
         self.angle = angle
+    
+    def __call__(self):
+        return self.x, self.y
 
 
     def fullCast(self,player,map):
         if self.lookingStraight(): return 100000
-        self.initCast(map.mapScale)
-        self.castRay(map)
+        offset = self.prepareOffset()
+        self.snapGrid(map.mapScale,offset)
+        self.scaleOffset(map.mapScale,offset)
+        self.texture = self.castRay(map)
+
+        del self.xOffset, self.yOffset
         return self.distance(player.x, player.y)
 
 
@@ -44,8 +56,8 @@ class Ray:
             dist += 1
             x, y = map.toIndex(self.x,self.y)
 
-            if map.inBounds(x,y) and map.findCoordinate(x,y) > 0:
-                return
+            if map.inBounds(x,y) and map(x,y) > 0:
+                return map(x,y)
             else:
                 self.move()
 
@@ -56,6 +68,9 @@ class Ray:
 
     def distance(self,x,y):
         return sqrt( pow(self.x - x, 2) + pow(self.y - y, 2) )
+    
+    def origin(self):
+        return self.startX, self.startY
 
 
 
@@ -65,13 +80,8 @@ class RayX(Ray):
 
 
     def __init__(self,x,y,angle):
+        self.type = "x"
         Ray.__init__(self,x,y,angle)
-
-
-    def initCast(self,scale):
-        xo = 1 / tan(radians(self.angle)) #UNSCALED X-OFFSET
-        self.snapGrid(scale,xo)
-        self.scaleOffset(scale,xo)
     
 
     def scaleOffset(self,scale,xo):
@@ -85,9 +95,11 @@ class RayX(Ray):
         yo = self.y % scale
         indexOffset = 0
         if self.lookingDown(): yo -= scale
-        if self.lookingUp  (): indexOffset = 0.0001
+        elif self.lookingUp(): indexOffset = 0.0001
         self.y -= yo + indexOffset
         self.x += yo * xo
+
+
 
 
     def lookingStraight(self):
@@ -99,6 +111,9 @@ class RayX(Ray):
     def lookingDown(self):
         return (180 < self.angle < 360)
 
+    def prepareOffset(self):
+        return 1 / tan(radians(self.angle)) #UNSCALED X-OFFSET
+
 
 
 
@@ -107,13 +122,8 @@ class RayY(Ray):
 
 
     def __init__(self,x,y,angle):
+        self.type = "y"
         Ray.__init__(self,x,y,angle)
-
-
-    def initCast(self,scale):
-        yo = tan(radians(self.angle)) #UNSCALED Y-OFFSET
-        self.snapGrid(scale,yo)
-        self.scaleOffset(scale,yo)
     
 
     def scaleOffset(self,scale,yo):
@@ -141,3 +151,6 @@ class RayY(Ray):
         
     def lookingRight(self):
         return (270 < self.angle <= 360 or 0 <= self.angle < 90)
+
+    def prepareOffset(self):
+        return tan(radians(self.angle)) #UNSCALED Y-OFFSET

@@ -1,4 +1,4 @@
-from Game.config import pygame,screen,const
+from Game.config import pygame,screen
 
 class Draw2D:
 
@@ -19,7 +19,12 @@ class Draw2D:
         scale = map.mapScale
         for y in range(map.mapY):
             for x in range(map.mapX):
-                square = map.findCoordinate(x,y)
+                square = map(x,y)
                 if square > 0:
                     squareRect = pygame.Rect( (x * scale + 1, y * scale + 1), (scale - 1,scale - 1) )
                     pygame.draw.rect(screen,(100,100,100),squareRect)
+    
+
+    def drawRay(ray):
+        color = (255,0,0) if ray.type == "x" else (0,0,255)
+        pygame.draw.line(screen, color, ray.origin(), ray() )

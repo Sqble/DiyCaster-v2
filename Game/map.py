@@ -15,7 +15,7 @@ class Map:
     def isWall(self,x,y):
         return self.map[y][x] > 0
 
-    def findCoordinate(self,x,y):
+    def __call__(self,x,y):
         return self.map[y][x]
 
     def toIndex(self,x,y):
