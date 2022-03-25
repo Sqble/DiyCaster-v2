@@ -3,6 +3,7 @@ from Game.debug import Draw2D
 from Game.entity import Entity
 from Game.ray import RayController
 from Game.map import map
+from Game.viewport3D import Viewport3D
 
 clock = pygame.time.Clock()
 
@@ -22,11 +23,11 @@ while running:
 
     screen.fill((255,255,255))
 
-    Draw2D.drawEntity(player)
-    Draw2D.drawMap(map)
+    #Draw2D.drawEntity(player)
+    #Draw2D.drawMap(map)
 
-    ray = RayController.cast_XY_Rays(player,map)
-    Draw2D.drawRay(ray)
+    rays = RayController.radiateRayArray(player,map,60)
+    Viewport3D.display(player, rays, map.mapScale, 60)
 
     pygame.display.flip()
 pygame.quit()

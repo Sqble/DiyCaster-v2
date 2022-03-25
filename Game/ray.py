@@ -1,15 +1,14 @@
 from math import radians,sqrt,tan
-from Game.config import pygame,screen
 
 class RayController:
 
 
-    def cast_XY_Rays(player,map):
+    def cast_XY_Rays(player,map,angle):
 
-        rayX = RayX(player.x,player.y,player.angle)
+        rayX = RayX(player.x,player.y,angle)
         xDistance = rayX.fullCast(player,map)
         
-        rayY = RayY(player.x,player.y,player.angle)
+        rayY = RayY(player.x,player.y,angle)
         yDistance = rayY.fullCast(player,map)
 
         if xDistance > yDistance:
@@ -20,8 +19,14 @@ class RayController:
             return rayX
     
 
-    #def drawRay(player,map):
-    #    ray = RayController.cast_XY_Rays(player,map)
+    def radiateRayArray(player,map,fov):
+        finalRays = []
+        startAngle = player.angle + (fov // 2)
+        endAngle   = player.angle - (fov // 2)
+        for angle in range(startAngle, endAngle - 1, -1):
+            angle %= 360
+            finalRays.append(RayController.cast_XY_Rays(player,map,angle))
+        return finalRays
 
 
 
