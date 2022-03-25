@@ -23,11 +23,11 @@ while running:
 
     screen.fill((255,255,255))
 
-    #Draw2D.drawEntity(player)
-    #Draw2D.drawMap(map)
-
     rays = RayController.radiateRayArray(player,map,60)
     Viewport3D.display(player, rays, map.mapScale, 60)
+
+    Draw2D.drawEntity(player)
+    Draw2D.drawMap(map)
 
     pygame.display.flip()
 pygame.quit()
