@@ -21,13 +21,14 @@ while running:
     if keys[pygame.K_a]: player.lookLeft()
     if keys[pygame.K_d]: player.lookRight()
 
-    screen.fill((255,255,255))
+    #screen.fill((255,255,255))
 
     rays = RayController.radiateRayArray(player,map,60)
-    Viewport3D.display(player, rays, map.mapScale, 60)
-
-    Draw2D.drawEntity(player)
-    Draw2D.drawMap(map)
+    Viewport3D.display(player, rays, map.mapScale)
+    #print(len(rays))
+    #for ray in rays: Draw2D.drawRay(ray)
+    #Draw2D.drawEntity(player)
+    #Draw2D.drawMap(map)
 
     pygame.display.flip()
 pygame.quit()

@@ -5,8 +5,8 @@ from Game.textures import colors, textures
 class Viewport3D:
     #Ray variables: x, y, startX, startY, angle, texture, type, distance
 
-    def display(player,rays,scale,fov):
-        xStep = const.WIDTH // fov
+    def display(player,rays,scale):
+        xStep = const.WIDTH // len(rays)
 
         Viewport3D.drawSky()
         Viewport3D.drawFloor()

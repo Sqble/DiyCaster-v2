@@ -1,5 +1,11 @@
 from math import radians,sqrt,tan
 
+def floatRange(start,stop,step):
+    y = start
+    while y >= stop:
+        yield y
+        y+=step
+
 class RayController:
 
 
@@ -21,9 +27,10 @@ class RayController:
 
     def radiateRayArray(player,map,fov):
         finalRays = []
-        startAngle = player.angle + (fov // 2)
-        endAngle   = player.angle - (fov // 2)
-        for angle in range(startAngle, endAngle - 1, -1):
+        startAngle = player.angle + (fov // 2) + 360
+        endAngle   = player.angle - (fov // 2) + 360
+        for angle in floatRange(startAngle,endAngle, - (fov / 319.5) ): #-0.47244 -0.18808
+        #for angle in range(startAngle, endAngle, -1): 
             angle %= 360
             finalRays.append(RayController.cast_XY_Rays(player,map,angle))
         return finalRays
