@@ -2,7 +2,7 @@ from Game.config import pygame,screen,const,background
 from math import cos,sin,radians
 from Game.textures import colors, textures
 
-
+#from numpy import cos
 
 
 planeDistance = 554.2562
@@ -14,7 +14,7 @@ class Viewport3D:
         xStep = const.WIDTH // len(rays)
 
         Viewport3D.drawSky()
-        #Viewport3D.drawFloor()
+        Viewport3D.drawFloor()
 
         for i,ray in enumerate(rays):
             wallHeight = Viewport3D.calcWallHeight(scale, ray.distance, player.angle, ray.angle)
@@ -40,17 +40,19 @@ class Viewport3D:
             
             #Draw Floor
             if wallHeight != const.HEIGHT:
-                for y_pixel in range(int(lineOffset + wallHeight)+2 ,const.HEIGHT): 
-                    dy = y_pixel - const.HEIGHT/2
+                for y_pixel in range( max(int(lineOffset + wallHeight)+1,261) ,const.HEIGHT, 2): 
+                    dy = y_pixel - 180
 
                     d = planeDistance * 10 / dy / cos(radians(player.angle - ray.angle + 0.0001))
-                    tx = int(player.x + cos(radians(ray.angle)) * d)
-                    ty = int(player.y - sin(radians(ray.angle)) * d)
+                    tx = int(player.x + cos(radians(ray.angle)) * d) %32
+                    ty = int(player.y - sin(radians(ray.angle)) * d) %32
 
-                    color = colors[ textures[2] [ty%32][tx%32] ]
+                    color = colors[ textures[2] [ty][tx] ]
+                    shade = min( 1, ((y_pixel - 260) / 60)**2 )
+                    color = ( color[0] * shade, color[1] * shade, color[2] * shade)
 
 
-                    pygame.draw.line(background, color, (i*xStep, y_pixel), (i*xStep+xStep, y_pixel))
+                    pygame.draw.line(background, color, (i*xStep, y_pixel), (i*xStep+xStep, y_pixel),2 )
                 #pygame.draw.line(background, (100,100,100), (i*xStep, const.HEIGHT-1), (i*xStep+xStep, const.HEIGHT-1), 3)
 
 
@@ -62,7 +64,7 @@ class Viewport3D:
         pygame.draw.rect(background, (173,216,230), pygame.Rect( (0,0), (const.WIDTH, const.HEIGHT // 2) ))
     
     def drawFloor():
-        pygame.draw.rect(background, (255,255,255), pygame.Rect( (0, const.HEIGHT // 2), (const.WIDTH, const.HEIGHT) ))
+        pygame.draw.rect(background, (0,0,0), pygame.Rect( (0, const.HEIGHT // 2 + 10), (const.WIDTH, 260) ))
     
     def removeFisheye(distance,angle1, angle2):
         return distance * cos(radians(angle1 - angle2))
