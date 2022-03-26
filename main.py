@@ -1,4 +1,4 @@
-from Game.config import pygame,screen,const
+from Game.config import pygame,const
 from Game.debug import Draw2D
 from Game.entity import Entity
 from Game.ray import RayController
@@ -8,6 +8,10 @@ from Game.viewport3D import Viewport3D
 clock = pygame.time.Clock()
 
 player = Entity(49,48,1)
+
+
+import timeit
+import functools
 
 running = True
 while running:
@@ -25,6 +29,10 @@ while running:
 
     rays = RayController.radiateRayArray(player,map,60)
     Viewport3D.display(player, rays, map.mapScale)
+    #print(clock.get_fps())
+
+
+
     #print(len(rays))
     #for ray in rays: Draw2D.drawRay(ray)
     #Draw2D.drawEntity(player)
