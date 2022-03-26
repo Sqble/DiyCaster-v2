@@ -7,11 +7,7 @@ from Game.viewport3D import Viewport3D
 
 clock = pygame.time.Clock()
 
-player = Entity(49,48,1)
-
-
-import timeit
-import functools
+player = Entity(49,48,330)
 
 running = True
 while running:

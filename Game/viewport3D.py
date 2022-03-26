@@ -6,6 +6,7 @@ from Game.textures import colors, textures
 
 
 planeDistance = 554.2562
+shadeLUT = {}
 
 class Viewport3D:
     #Ray variables: x, y, startX, startY, angle, texture, type, distance
@@ -38,30 +39,39 @@ class Viewport3D:
                 #pygame.draw.line(screen,color, (drawX, drawY), (drawX, drawY + yStep), xStep)
             
             
-            #Draw Floor
+            #Draw Floor and ceiling
+            #I would make this look nice but im scared it will break...
+            #EXTREMELY crucial it stays exactly like this because this gets run 16000 times a frame
             if wallHeight != const.HEIGHT:
+                beta = cos(radians(player.angle - ray.angle + 0.0001))
+                coss = cos(radians(ray.angle))
+                sinn = sin(radians(ray.angle))
+                realPlaneDistance = planeDistance * 10 / beta
                 for y_pixel in range( max(int(lineOffset + wallHeight)+1,261) ,const.HEIGHT, 2): 
-                    dy = y_pixel - 180
-
-                    d = planeDistance * 10 / dy / cos(radians(player.angle - ray.angle + 0.0001))
-                    tx = int(player.x + cos(radians(ray.angle)) * d) %32
-                    ty = int(player.y - sin(radians(ray.angle)) * d) %32
+                    
+                    d =  realPlaneDistance / (y_pixel - 180)
+                    tx = int(player.x + coss * d) % 32
+                    ty = int(player.y - sinn * d) % 32
 
                     color = colors[ textures[2] [ty][tx] ]
-                    shade = min( 1, ((y_pixel - 260) / 60)**2 )
+                    shade = Viewport3D.shadeLUT(y_pixel)
                     color = ( color[0] * shade, color[1] * shade, color[2] * shade)
 
-
                     pygame.draw.line(background, color, (i*xStep, y_pixel), (i*xStep+xStep, y_pixel),2 )
-                #pygame.draw.line(background, (100,100,100), (i*xStep, const.HEIGHT-1), (i*xStep+xStep, const.HEIGHT-1), 3)
+                    pygame.draw.line(background, color, (i*xStep, 360 - y_pixel), (i*xStep+xStep, 360 - y_pixel),2 )
+                    
 
 
         screen.blit(background,(0,0))
     
 
+    def shadeLUT(y_pixel):
+        if y_pixel not in shadeLUT:
+            shadeLUT[y_pixel] = min( 1, ((y_pixel - 260) / 60)**2 )
+        return shadeLUT[y_pixel]
 
-    def drawSky():
-        pygame.draw.rect(background, (173,216,230), pygame.Rect( (0,0), (const.WIDTH, const.HEIGHT // 2) ))
+    def drawSky(): #(173,216,230)
+        pygame.draw.rect(background, (0,0,0), pygame.Rect( (0,100), (const.WIDTH, const.HEIGHT // 2 - 10) ))
     
     def drawFloor():
         pygame.draw.rect(background, (0,0,0), pygame.Rect( (0, const.HEIGHT // 2 + 10), (const.WIDTH, 260) ))
