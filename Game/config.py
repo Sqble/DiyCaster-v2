@@ -11,6 +11,7 @@ class const:
         return self.HEIGHT
 
 from pygame.locals import *
+
 flags = SCALED #| DOUBLEBUF
 screen = pygame.display.set_mode( [const.WIDTH,const.HEIGHT], flags )
 screen.set_alpha(None)

@@ -24,7 +24,7 @@ while running:
     #screen.fill((255,255,255))
 
     rays = RayController.radiateRayArray(player,map,60)
-    Viewport3D.display(player, rays, map.mapScale)
+    Viewport3D.display(player, rays, map)
     #print(clock.get_fps())
 
 

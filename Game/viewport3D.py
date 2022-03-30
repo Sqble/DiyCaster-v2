@@ -1,6 +1,6 @@
 from Game.config import pygame,screen,const,background
 from math import cos,sin,radians
-from Game.textures import colors, textures
+from Game.textures import  textures
 
 #from numpy import cos
 
@@ -11,14 +11,14 @@ shadeLUT = {}
 class Viewport3D:
     #Ray variables: x, y, startX, startY, angle, texture, type, distance
 
-    def display(player,rays,scale):
+    def display(player,rays,map):
         xStep = const.WIDTH // len(rays)
 
         Viewport3D.drawSky()
         Viewport3D.drawFloor()
 
         for i,ray in enumerate(rays):
-            wallHeight = Viewport3D.calcWallHeight(scale, ray.distance, player.angle, ray.angle)
+            wallHeight = Viewport3D.calcWallHeight(map.mapScale, ray.distance, player.angle, ray.angle)
             yStep = wallHeight / 32
 
             lineOffset = Viewport3D.heightBeforeWall(wallHeight)
@@ -29,7 +29,8 @@ class Viewport3D:
 
             #Draw Wall
             for textureY in range(0,32):
-                color = colors[ textures[ray.texture] [textureY][textureX] ]
+                #color = colors[ textures[ray.texture] [textureY][textureX] ]
+                color = textures[ray.texture] [textureY * 32 + textureX]
                 color = Viewport3D.shade(ray.type, color)
 
                 pygame.draw.rect(background, color, pygame.Rect( (i * xStep, textureY * yStep + lineOffset), (xStep, yStep + 1) ) )
@@ -50,10 +51,13 @@ class Viewport3D:
                 for y_pixel in range( max(int(lineOffset + wallHeight)+1,261) ,const.HEIGHT, 2): 
                     
                     d =  realPlaneDistance / (y_pixel - 180)
-                    tx = int(player.x + coss * d) % 32
-                    ty = int(player.y - sinn * d) % 32
+                    tx = int(player.x + coss * d)
+                    ty = int(player.y - sinn * d)
 
-                    color = colors[ textures[2] [ty][tx] ]
+                    x,y = map.toIndex(tx,ty)
+                    texture = map.floor[y][x]
+                    color = textures[ texture ] [(ty%32) * 32 + tx%32]
+
                     shade = Viewport3D.shadeLUT(y_pixel)
                     color = ( color[0] * shade, color[1] * shade, color[2] * shade)
 
@@ -101,5 +105,3 @@ class Viewport3D:
             if ray.lookingLeft():
                 x = 31-x
         return x
-
-
