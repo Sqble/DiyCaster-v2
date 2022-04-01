@@ -2,7 +2,7 @@ import pygame
 pygame.init()
 
 class const:
-    WIDTH, HEIGHT, FPS = 640, 360, 40
+    WIDTH, HEIGHT, FPS = int(640*1.5), int(360*1.5), 40
     #WIDTH, HEIGHT, FPS = 500,500,60
 
     def findWidth(self):

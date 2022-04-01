@@ -29,7 +29,7 @@ class RayController:
         finalRays = []
         startAngle = player.angle + (fov // 2) + 360
         endAngle   = player.angle - (fov // 2) + 360
-        for angle in floatRange(startAngle,endAngle, -0.376 ): #-0.47244 -0.18808
+        for angle in floatRange(startAngle,endAngle, -0.501 ): #-0.376
         #for angle in range(startAngle, endAngle, -1): 
             angle %= 360
             finalRays.append(RayController.cast_XY_Rays(player,map,angle))

@@ -20,7 +20,7 @@ class Map:
         return self.map[y][x]
 
     def toIndex(self,x,y):
-        return int(x - (x % self.mapScale)) // self.mapScale, int(y - (y % self.mapScale)) // self.mapScale
+        return int(x - (x % 32)) // 32, int(y - (y % 32)) // 32
     
     def inBounds(self,x,y):
         return 0 <= x < self.mapX and 0 <= y < self.mapY
