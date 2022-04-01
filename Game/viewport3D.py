@@ -32,7 +32,7 @@ class Viewport3D:
             
             #Draw Floor and ceiling
             #I would make this look nice but im scared it will break...
-            #EXTREMELY crucial it runs as fast as possible because this gets run 16000 times a frame
+            #EXTREMELY crucial it runs as fast as possible because this gets run tens of thousands of times per frame
             if wallHeight != const.HEIGHT:
                 beta = cos(radians(player.angle - ray.angle + 0.0001))
                 coss = cos(radians(ray.angle))
@@ -45,7 +45,7 @@ class Viewport3D:
                     tx = int(player.x + coss * d)
                     ty = int(player.y - sinn * d)
 
-                    color = textures[ map.floor[ty >> 6 - 1][tx >> 6 - 1] ] [(ty&31) * 32 + (tx&31)]
+                    color = textures[ map.floor[ty >> 6 - 1][tx >> 6 - 1] ] [(ty&31) * 32 + (tx&31)] #if it works dont touch it
                     
                     pygame.draw.line(background, color, (step,       y_pixel), (step+xStep,       y_pixel), 2)
                     pygame.draw.line(background, color, (step, 540 - y_pixel), (step+xStep, 540 - y_pixel), 2)
@@ -54,7 +54,7 @@ class Viewport3D:
         screen.blit(background,(0,0))
     
 
-    def drawSky(): #
+    def drawSky():
         pygame.draw.rect(background, (173,216,230), pygame.Rect( (0,0), (const.WIDTH, const.HEIGHT // 2 - 10) ))
     
     def drawFloor():

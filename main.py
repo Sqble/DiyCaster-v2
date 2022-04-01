@@ -5,21 +5,22 @@ from Game.ray import RayController
 from Game.map import map
 from Game.viewport3D import Viewport3D
 
+
 clock = pygame.time.Clock()
 
-player = Entity(49,48,330)
+player = Entity(89,88,60)
 
 running = True
 while running:
-    clock.tick(const.FPS)
+    dt = clock.tick(40) / 1000
 
     for e in pygame.event.get(): 
         if e.type == pygame.QUIT: running = False
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_w]: player.moveForward(map)
-    if keys[pygame.K_s]: player.moveBackward(map)
-    if keys[pygame.K_a]: player.lookLeft()
-    if keys[pygame.K_d]: player.lookRight()
+    if keys[pygame.K_w]: player.moveForward(map,dt)
+    if keys[pygame.K_s]: player.moveBackward(map,dt)
+    if keys[pygame.K_a]: player.lookLeft(dt)
+    if keys[pygame.K_d]: player.lookRight(dt)
 
     #screen.fill((255,255,255))
 

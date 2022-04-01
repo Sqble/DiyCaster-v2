@@ -10,8 +10,8 @@ class Draw2D:
         entityRect = pygame.Rect( (entity.x - size, entity.y - size), (size * 2, size * 2) )
         pygame.draw.rect(screen, color, entityRect)
         #Draw dx,dy
-        startPos = (entity.x               , entity.y               )
-        endPos   = (entity.x + entity.dx * 8, entity.y + entity.dy * 8)
+        startPos = (entity.x            , entity.y            )
+        endPos   = (entity.x + entity.dx, entity.y + entity.dy)
         pygame.draw.line(screen, color, startPos, endPos, 2)
     
 

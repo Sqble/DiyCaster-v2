@@ -11,7 +11,7 @@ class Entity:
 
 
     def __calcSpeeds(self):
-        speed = 2
+        speed = 70
         self.dx =  cos(radians(self.angle)) * speed
         self.dy = -sin(radians(self.angle)) * speed
     
@@ -21,25 +21,25 @@ class Entity:
         return map.isWall(xi,yi)
 
 
-    def moveForward(self,map):
-        if not self.coordIsWall(map, self.x + self.dx, self.y):
-            self.x += self.dx
-        if not self.coordIsWall(map, self.x, self.y + self.dy):
-            self.y += self.dy
+    def moveForward(self,map,dt):
+        if not self.coordIsWall(map, self.x + self.dx * dt, self.y):
+            self.x += self.dx * dt
+        if not self.coordIsWall(map, self.x, self.y + self.dy * dt):
+            self.y += self.dy * dt
 
 
-    def moveBackward(self,map):
-        if not self.coordIsWall(map, self.x - self.dx, self.y):
-            self.x -= self.dx
-        if not self.coordIsWall(map, self.x, self.y - self.dy):
-            self.y -= self.dy
+    def moveBackward(self,map,dt):
+        if not self.coordIsWall(map, self.x - self.dx * dt, self.y):
+            self.x -= self.dx * dt
+        if not self.coordIsWall(map, self.x, self.y - self.dy * dt):
+            self.y -= self.dy * dt
     
 
-    def lookLeft(self):
-        self.angle = (self.angle + 3) % 360
+    def lookLeft(self,dt):
+        self.angle = (self.angle + 90 * dt) % 360
         self.__calcSpeeds()
     
 
-    def lookRight(self):
-        self.angle = (self.angle - 3) % 360
+    def lookRight(self,dt):
+        self.angle = (self.angle - 90 * dt) % 360
         self.__calcSpeeds()
